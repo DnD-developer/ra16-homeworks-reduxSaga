@@ -1,42 +1,41 @@
 //utils
-import { debounce, put, retry, spawn, takeLatest } from "redux-saga/effects"
+import { debounce, put, retry, takeLatest } from "redux-saga/effects"
 import { settingSearchSaga } from "../settings.middleware"
 //api
-import requestByQuery from "../../api/requestByQuery.api"
+import request from "../../api/request.api"
 //actions
 import { SearchSLice } from "../../store/reducers/Search.reducer"
 
-const { LOADING, SUCCESS, FAIL, SEARCHING } = SearchSLice.actions
+const { LOADING_SEARCH, SUCCESS_SEARCH, FAIL_SEARCH, SEARCHING } = SearchSLice.actions
 
-function filterChangeSearchAction({ type, payload }) {
+function filterChangeSearchAction({ type }) {
 	return type === SEARCHING.type
 }
 
 function* handleChangeSearchSaga({ payload }) {
-	yield put(LOADING(payload))
+	yield put(LOADING_SEARCH(payload))
 }
 
 function* handleSearchSkillsSaga({ payload }) {
 	try {
 		const retryCount = settingSearchSaga.retryCount
 		const retryDelay = settingSearchSaga.retryDelay * 1000
-		const data = yield retry(retryCount, retryDelay, requestByQuery, payload, import.meta.env.VITE_MAIN_URL, import.meta.env.VITE_SEARCH_URL)
+		const data = yield retry(retryCount, retryDelay, request, {
+			query: payload,
+			mainUrl: import.meta.env.VITE_MAIN_URL,
+			subURL: import.meta.env.VITE_SEARCH_URL
+		})
 
-		yield put(SUCCESS(data))
+		yield put(SUCCESS_SEARCH(data))
 	} catch (error) {
-		yield put(FAIL())
+		yield put(FAIL_SEARCH())
 	}
 }
 
-function* watchChangeSearchSaga() {
+export function* watchChangeSearchSaga() {
 	yield debounce(300, filterChangeSearchAction, handleChangeSearchSaga)
 }
 
-function* watchSearchSkillsSaga() {
-	yield takeLatest(LOADING.type, handleSearchSkillsSaga)
-}
-
-export default function* saga() {
-	yield spawn(watchChangeSearchSaga)
-	yield spawn(watchSearchSkillsSaga)
+export function* watchSearchSkillsSaga() {
+	yield takeLatest(LOADING_SEARCH.type, handleSearchSkillsSaga)
 }

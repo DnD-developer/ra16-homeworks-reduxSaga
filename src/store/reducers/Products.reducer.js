@@ -1,38 +1,36 @@
 //utils
 import { createSlice } from "@reduxjs/toolkit"
 //actionsType
-import { FAIL_SEARCH, LOADING_SEARCH, SEARCHING, SUCCESS_SEARCH } from "../actions/types.action"
+import { FAIL_PRODUCTS, LOADING_PRODUCTS, SUCCESS_PRODUCTS } from "../actions/types.action"
 
 const initialState = {
 	items: [],
 	isLoading: false,
-	isFail: false,
-	search: ""
+	isFail: false
 }
 
-export const SearchSLice = createSlice({
-	name: "search",
+export const ProductsSLice = createSlice({
+	name: "products",
 	initialState,
 	reducers: {
-		[LOADING_SEARCH]: state => {
+		[LOADING_PRODUCTS]: state => {
 			state.isLoading = true
 			state.isFail = false
 			state.items = []
+			state.activeProduct = null
 		},
-		[SUCCESS_SEARCH]: (state, { payload }) => {
+		[SUCCESS_PRODUCTS]: (state, { payload }) => {
 			state.isLoading = false
 			state.isFail = false
 			state.items = payload || []
 		},
-		[FAIL_SEARCH]: state => {
+		[FAIL_PRODUCTS]: state => {
 			state.isFail = true
 			state.isLoading = false
 			state.items = []
-		},
-		[SEARCHING]: (state, { payload }) => {
-			state.search = payload
+			state.activeProduct = null
 		}
 	}
 })
 
-export default SearchSLice.reducer
+export default ProductsSLice.reducer
