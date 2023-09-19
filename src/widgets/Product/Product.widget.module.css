@@ -1,16 +1,21 @@
 .widget {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: column;
+
 	max-width: 500px;
 
-	margin: 0 auto;
-	margin-top: 20px;
-}
+	height: 250px;
 
-.content {
-	width: 100%;
-	margin-top: 0px;
+	margin: 0 auto;
+
+	margin-top: 30px;
 
 	border: 1px solid #959595;
 	border-radius: 5px;
+
+	padding: 20px;
 }
 
 .loader {

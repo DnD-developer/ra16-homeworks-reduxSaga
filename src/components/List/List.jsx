@@ -1,6 +1,7 @@
 //styles
-import style from "./List.module.css"
+//components
+import { List as ListRender } from "antd"
 
 export default function List({ data, children }) {
-	return <ul className={style.list}>{data.map(item => children(item))}</ul>
+	return <ListRender itemLayout="vertical" size="small" dataSource={data} renderItem={children} style={{ width: "100%" }} />
 }
